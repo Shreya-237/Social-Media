@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Chit-Chat - Social Media</title>
+    <link rel="stylesheet" href="{% static 'social/style.css' %}">
+</head>
+<body>
+<header class="navbar">
+
+<div class="brand">
+    <img src="{% static 'social/logo.png' %}" alt="Daily Chit-Chat">
+    <h1>Daily Chit-Chat</h1>
+</div>
+
+    <nav class="nav-links">
+
+        <a href="{% url 'home' %}">
+            🏠 Home
+        </a>
+
+        {% if user.is_authenticated %}
+
+            <a href="{% url 'profile' user.username %}">
+                👤 Profile
+            </a>
+
+            <a href="{% url 'logout' %}"
+               onclick="return confirmLogout();">
+                Logout
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+            <a href="{% url 'register' %}">
+                Register
+            </a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+<div class="container">
+
+{% if user.is_authenticated %}
+
+    <div class="card">
+        <h2>Hello, {{ user.username }}!</h2>
+
+        <h2>Create a Post</h2>
+
+        <form method="POST" action="{% url 'create_post' %}">
+            {% csrf_token %}
+
+            <textarea
+                name="content"
+                placeholder="What's on your mind?"
+                rows="4"
+                required></textarea>
+
+            <br><br>
+
+            <button type="submit">Post</button>
+        </form>
+    </div>
+
+
+    <h2>Latest Posts</h2>
+
+    {% for post in posts %}
+
+        <div class="card">
+
+            <h3>
+                <a class="profile-link"
+                   href="{% url 'profile' post.user.username %}">
+                    {{ post.user.username }}
+                </a>
+
+                {% if post.user != user %}
+
+                    {% if post.user.id in following_ids %}
+
+                        <a href="{% url 'follow_user' post.user.id %}">
+                            Unfollow
+                        </a>
+
+                    {% else %}
+
+                        <a href="{% url 'follow_user' post.user.id %}">
+                            Follow
+                        </a>
+
+                    {% endif %}
+
+                {% endif %}
+            </h3>
+
+
+            <p>{{ post.content }}</p>
+
+            <small>{{ post.created_at }}</small>
+
+            <div class="action">
+
+                <a href="{% url 'like_post' post.id %}">
+                    ❤️ Like
+                </a>
+
+                <span>
+                    {{ post.likes.count }} Likes
+                </span>
+
+            </div>
+
+
+            <br>
+
+            <form method="POST"
+                  action="{% url 'add_comment' post.id %}">
+
+                {% csrf_token %}
+
+                <input
+                    type="text"
+                    name="comment"
+                    placeholder="Write a comment..."
+                    required>
+
+                <br><br>
+
+                <button type="submit">
+                    Comment
+                </button>
+
+            </form>
+
+
+            <h4>Comments</h4>
+
+            {% for comment in post.comments.all %}
+
+                <div class="comment">
+
+                    <strong>
+                        {{ comment.user.username }}
+                    </strong>:
+
+                    {{ comment.content }}
+
+                </div>
+
+            {% empty %}
+
+                <p>No comments yet.</p>
+
+            {% endfor %}
+
+        </div>
+
+    {% empty %}
+
+        <div class="card">
+            <p>No posts yet. Create the first post!</p>
+        </div>
+
+    {% endfor %}
+
+
+{% else %}
+
+    <div class="card">
+
+        <h2>Welcome!</h2>
+
+        <p>Please login or create an account to use the platform.</p>
+
+        <a href="{% url 'login' %}">
+            Login
+        </a>
+
+        &nbsp;&nbsp;
+
+        <a href="{% url 'register' %}">
+            Register
+        </a>
+
+    </div>
+
+{% endif %}
+
+</div>
+
+<script src="{% static 'social/script.js' %}"></script>
+
+</body>
+</html>

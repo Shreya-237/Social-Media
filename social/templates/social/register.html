@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Daily Chit-Chat</title>
+    <link rel="stylesheet" href="{% static 'social/style.css' %}">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="brand">
+        <img src="{% static 'social/logo.png' %}" alt="Daily Chit-Chat">
+        <h1>Daily Chit-Chat</h1>
+    </div>
+
+    <nav class="nav-links">
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <a href="{% url 'login' %}">Login</a>
+    </nav>
+
+</header>
+
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <div class="auth-icon">
+            <img src="{% static 'social/logo.png' %}"
+                 alt="Daily Chit-Chat">
+        </div>
+
+        <h1>Create Account</h1>
+
+        <p class="auth-subtitle">
+            Join Daily Chit-Chat today
+        </p>
+
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Choose a username"
+                required>
+
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required>
+
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                required>
+
+
+            <label>Confirm Password</label>
+
+            <input
+                type="password"
+                name="confirm_password"
+                placeholder="Confirm your password"
+                required>
+
+
+            <button type="submit" class="auth-button">
+                Create Account
+            </button>
+
+        </form>
+
+
+        <p class="auth-footer">
+            Already have an account?
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Daily Chit-Chat</title>
+    <link rel="stylesheet" href="{% static 'social/style.css' %}">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="brand">
+        <div class="brand-icon"></div>
+         <img src="{% static 'social/logo.png' %}" alt="Daily Chit-Chat"><br/>
+        <h1>Daily Chit-Chat</h1>
+    </div>
+
+    <nav class="nav-links">
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <a href="{% url 'register' %}">Register</a>
+    </nav>
+
+</header>
+
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+    <div class="auth-icon">
+    <img src="{% static 'social/logo.png' %}" alt="Daily Chit-Chat">
+    </div>
+
+        <h1>Welcome Back</h1>
+
+        <p class="auth-subtitle">
+            Login to continue to Daily Chit-Chat
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                required>
+
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required>
+
+
+            <button type="submit" class="auth-button">
+                Login
+            </button>
+
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account?
+            <a href="{% url 'register' %}">
+                Create Account
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
